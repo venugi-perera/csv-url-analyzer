@@ -43,10 +43,13 @@ function App() {
         const formData = new FormData();
         formData.append("file", file);
 
-        const res = await fetch("http://localhost:2000/analyze-csv", {
-          method: "POST",
-          body: formData,
-        });
+        const res = await fetch(
+          `${process.env.REACT_APP_API_BASE_URL}/analyze-csv`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
 
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
@@ -58,14 +61,19 @@ function App() {
         setCsvPreview(data.rows || []);
         setResult({ type: "csv", message: data.message });
         if (data.downloadUrl) {
-          setDownloadUrl(`http://localhost:2000${data.downloadUrl}`);
+          setDownloadUrl(
+            `${process.env.REACT_APP_API_BASE_URL}${data.downloadUrl}`
+          );
         }
       } else if (url) {
-        const res = await fetch("http://localhost:2000/analyze-url", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url }),
-        });
+        const res = await fetch(
+          `${process.env.REACT_APP_API_BASE_URL}/analyze-url`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url }),
+          }
+        );
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
           throw new Error(err.error || "URL analysis failed");
